@@ -22,7 +22,7 @@
 
             <!-- Title -->
             <h3 style="margin: 0 0 22px 0; font-size: 18px; font-weight: 700; color: #1e293b; text-align: center;">
-                Add Lead Priority
+                Add Lead Priorityy
             </h3>
 
             <form method="POST" action="{{ route('crm.lead-priority.store') }}">
