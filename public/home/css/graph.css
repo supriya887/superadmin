@@ -1,0 +1,19 @@
+/* Service Usage Chart Styles */
+.graph-card {
+    height: 100%;
+}
+
+.apexcharts-toolbar {
+    display: none !important;
+}
+
+.apexcharts-tooltip {
+    border-radius: 8px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+    border: none !important;
+    font-size: 13px !important;
+}
+
+.apexcharts-gridline {
+    stroke-dasharray: 4;
+}

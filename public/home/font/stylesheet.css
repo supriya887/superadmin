@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Bizantheum';
+    src: url('Bizantheum.woff2') format('woff2'),
+        url('Bizantheum.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

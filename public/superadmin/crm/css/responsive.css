@@ -1,0 +1,464 @@
+@media(max-width:1680px) {
+    :root {
+    --font-size-15px: 13px;
+    --font-size-14px: 13px;
+    --font-size-20px: 18px;
+    --font-size-24px: 20px;
+}
+.crm-emp-shell {
+    width: 86%;
+    margin-left: 16%;
+}
+.employee-panel-card {
+    width: 230px;
+    left: 15%;
+    padding: 25px 15px
+}
+.employee-panel-link {
+    min-height: 35px;
+    padding: 8px;
+    gap: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.employee-panel-link i, .employee-panel-link svg {
+    width: 18px;
+    height: 18px;
+}
+.crm-emp-shell {
+    width: 85%;
+    margin-left: 17%;
+}
+.contact-info h5 {
+    margin: 0 ;
+    font-size: 14px;
+}
+.contact-info p {
+    font-size: 14px;
+}
+.content {
+    padding: 25px 3%;
+}
+.business-header {
+    margin-bottom: 12px;
+}
+.icon {
+    width: 30px;
+    height: 30px;
+    padding: 6px;
+}
+.sidebar {
+    padding: 15px;
+}
+.sidebar .left {
+    gap: 10px;
+}
+.card-icon {
+    width: 35px;
+    height: 35px;
+}
+.partner-card p {
+    width: 80%;
+}
+.plan-features li {
+    font-size: 12px;
+}
+.plan-edit-btn {
+    font-size: var(--font-size-14px);
+    width: 90px;
+    margin: 12px auto 15px;
+    padding: 4px 15px;
+}
+.plan-price strong {
+    font-size: 30px;
+}
+.plan-card-header h3 {
+    font-size: 20px;
+}
+.plan-card-header {
+    padding: 10px 10px;
+}
+.badge {
+    font-size: 12px;
+}
+td {
+    font-size: var(--font-size-14px);
+}
+.card-badge svg {
+    width: 15px;
+}
+.card-badge {
+    font-size: 10px;
+}
+.finance-info p {
+    margin: 0;
+}
+.chart-action button svg {
+    width: 15px;
+}
+    .order-row {
+    padding: 10px 15px;
+}
+.plan-icon {
+    width: 35px;
+    padding: 6px;
+    height: 35px;
+}
+.business-header button {
+    padding: 4px 20px;
+}
+.chart-action button {
+    padding: 5px 20px;
+}
+.chip {
+    font-size: 10px;
+}
+.partner-tab {
+    font-size: 12px;
+}
+.summary-section {
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+.card-badge {
+    top: 10px;
+    right: 10px;
+}
+.amount p {
+    margin: 0;
+}
+.renew-btn {
+    padding: 2px 20px;
+}
+.action-btn {
+    width: 25px;
+    height: 25px;
+}
+.summary-grid {
+    gap: 15px;
+}
+.finance-icon {
+    padding: 6px;
+    width: 35px;
+    height: 35px;
+}
+.info-item p,.contact-item p {
+    font-size: var(--font-size-14px);
+}
+.partner-id,.order-id span {
+    font-size: 12px;
+}
+.sub-content h4 {
+font-size: var(--font-size-16px);
+}
+.sub-meta span svg {
+    width: 15px;}
+    .sub-icon {
+    width: 35px;
+    height: 35px;}
+    .sub-code,.sub-amount {
+    font-size: var(--font-size-14px);
+}
+.approve-btn, .reject-btn {
+    padding: 2px 12px;
+}
+.payment-total strong {
+    font-size: 18px;
+}
+.summary-list label,.summary-list strong,.summary-list span {
+    font-size: var(--font-size-14px);
+}
+.tab-btn {
+    font-size: 12px;
+    padding: 7px 14px
+}
+.submit-btn {
+    padding: 8px 30px;
+}
+.order-dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 350px;
+    gap: 16px;
+    align-items: start;
+}
+.contact-information-section {
+    height: 335px;
+}
+.lead-contact-card h4 {
+    margin: 0 0 3px;
+}
+.card-header h3 svg {
+    width: 16px;
+}
+.summary-list {
+    gap: 8px;
+}
+.p-16 {
+    padding: 12px;
+}
+.form-group input, .form-group textarea {
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+.common-form {
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+.lead-company-header {
+    height: 60px;
+}
+.lead-company-header h3 {
+    font-size: 20px;
+}
+.user-avatar {
+    width: 25px;
+    height: 25px;
+}
+.service-check {
+    top: 10px;
+    left: 10px;
+}
+.add-credit-btn {
+    gap: 4px;
+    border-radius: 18px;
+    font-size: 10px;
+}
+.sidebar, .logo {
+    width: 15%;
+}
+}
+@media(max-width:1480px) {
+        .employee-panel-link {
+        font-size: 13px;
+    }
+        .employee-panel-card {
+        width: 220px;
+        left: 13%;
+        padding: 15px 12px;
+    }
+    .crm-chat a {
+        width: auto;
+    }
+    .sidebar, .logo {
+        width: 14%;
+    }
+    .table-row {
+        display: grid;
+        padding: 10px 20px;
+    }
+    .crm-chat svg {
+        width: 15px;
+    }
+    .content {
+        padding: 25px 2%;
+    }
+    .sidebar, .logo {
+        width: 13%;
+    }
+    .content {
+        margin-left: 13%;
+        width: 87%;
+    }
+        .crm-emp-shell {
+        width: 81%;
+        margin-left: 19%;
+    }
+    .full-content .crm-emp-shell {
+    width: 90%;
+        margin-left: 10%;
+
+}
+}
+@media(max-width:991px) {
+
+    .sidebar {
+        width: 280px;
+        transform: translateX(-100%);
+        transition: transform .3s ease;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 1200px) {
+    .crm-emp-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .form-grid.form-grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1100px) {
+    .crm-emp-shell {
+        grid-template-columns: 1fr;
+    }
+    .crm-emp-main-grid,
+    .order-dashboard-grid,
+    .customer-content {
+        grid-template-columns: 1fr;
+    }
+    .order-dashboard-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .header {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px 16px;
+    }
+    .header .search-box {
+        width: 100%;
+        max-width: none;
+        order: 3;
+    }
+    .page-header {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .page-header h2 {
+        font-size: 22px;
+        word-break: break-word;
+    }
+    .crm-actions,
+    .back {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .crm-action-btn,
+    .back-btn {
+        width: auto;
+        min-width: 0;
+        height: 40px;
+        padding: 0 14px;
+        flex: 0 1 auto;
+    }
+    .stats-grid,
+    .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px;
+    }
+    .form-grid,
+    .form-grid.form-grid-3,
+    .form-grid.form-grid-4,
+    .plan-box .form-grid,
+    .crm-emp-fields,
+    .crm-emp-overview,
+    .additional-contact-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px;
+    }
+    .main-form-layout,
+    .form-right {
+        display: block;
+        grid-template-columns: 1fr !important;
+    }
+    .lead-specification,
+    .document-section {
+        margin-top: 20px;
+    }
+    .lead-company-header {
+        height: auto;
+        min-height: 56px;
+        padding: 14px 110px 14px 14px;
+        justify-content: flex-start;
+    }
+    .edit-lead-btn {
+        top: 50%;
+        transform: translateY(-50%);
+        right: 12px;
+    }
+    .common-form {
+        padding: 16px;
+    }
+    .credit-modal {
+        padding: 12px;
+        align-items: flex-start;
+        overflow-y: auto;
+    }
+    .credit-modal-box {
+        width: 100%;
+        max-width: 100%;
+        margin: 12px 0;
+    }
+    .bulk-action-bar {
+        left: 12px;
+        right: 12px;
+        width: auto;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 767px) {
+    .content {
+        padding: 16px 4%;
+        width: 100%;
+        margin-left: 0;
+    }
+    .crm-lead-tabs a,
+    .crm-lead-tabs button,
+    .partner-tab {
+        min-width: 120px;
+        height: 42px;
+        font-size: 12px;
+        flex-shrink: 0;
+    }
+    .stats-grid,
+    .summary-grid,
+    .crm-emp-stats {
+        grid-template-columns: 1fr !important;
+    }
+    .summary-card {
+        min-width: 0;
+    }
+    .table-search {
+        width: 100% !important;
+        min-width: 0;
+        flex: 1 1 100%;
+    }
+    .crm-lead-table,
+    .crm-quo-table,
+    .es-quo-table,
+    .common-table-card > table {
+        min-width: 640px;
+    }
+    .employee-leads-table table {
+        min-width: 520px;
+    }
+    .submit-btn {
+        width: 100%;
+    }
+    .crm-action-btn span {
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header h2 {
+        font-size: 20px;
+    }
+    .crm-action-btn {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+    .header .logo img {
+        max-width: 110px;
+        height: auto;
+    }
+}

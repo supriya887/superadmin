@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class AdminUserRole extends Model
+{
+    protected $table = 'admin_user_role';
+    protected $connection = 'pgsql_admin';
+    protected $guarded = ['id'];
+    protected $fillable = [
+        'role_name',
+        'rolevalue',
+        'status'
+    ];
+}

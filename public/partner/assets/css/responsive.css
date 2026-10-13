@@ -1,0 +1,139 @@
+@media (max-width: 2000px) {
+    .partner-left {
+        width: 25%;
+    }
+
+    .partner-right {
+        width: 75%;
+    }
+}
+
+@media (max-width: 1800px) {
+    .modal-header{
+            padding: 9px;
+    }
+    .modal-title{
+        font-size: 13px;
+    }
+    .action-btn{
+        width: 27px;
+    height: 26px;
+    font-size: 9px;
+    }
+    .custom-table th{
+        padding: 10px 10px;
+            font-size: 11px;
+    }
+    .custom-table td{
+            padding: 9px 10px;
+            font-size: 13px;
+    }
+    .content-card{
+        padding: 35px 35px;
+        max-width: 69%;
+    }
+    .partner-left {
+        width: 25%;
+    }
+
+    .EmailID {
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    .partner-right {
+        width: 75%;
+    }
+
+    .custom-input,
+    .custom-select,
+    .custom-search-btn {
+        font-size: 12px !important;
+        padding: 7px 5px !important;
+        border-radius: 4px !important;
+        height: 35px !important;
+    }
+
+    .custom-label {
+        font-size: 11px;
+        margin-bottom: 4px;
+    }
+
+    .auth-content p {
+        font-size: 11px;
+    }
+
+    .otp-box {
+        width: 40px;
+        height: 45px;
+        font-size: 13px;
+    }
+
+    .btn-primary {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+        padding: 6px;
+        font-size: 12px;
+    }
+
+    .small,
+    small {
+        font-size: 12px;
+    }
+
+    .nav-link {
+        font-size: 13px;
+        padding: 10px 14px;
+    }
+
+    #sidebar {
+        width: 200px;
+    }
+
+    .main-wrapper {
+        margin-left: 200px;
+    }
+    .sidebar-footer .balance-amount {
+        font-size: 12px;
+    }
+    .top-navbar{
+        margin-left: 200px;
+    }
+    .text-danger{
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 1400px) {
+    .partner-left {
+        width: 35%;
+    }
+
+    .partner-right {
+        width: 65%;
+    }
+}
+
+@media (max-width: 991px) {
+    .partner-wrapper {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .partner-left {
+        width: 100%;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .auth-content {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .partner-right,
+    .peeking-character {
+        display: none;
+    }
+}
