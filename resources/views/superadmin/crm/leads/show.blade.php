@@ -105,6 +105,13 @@
                         </span>
 
                         <span>
+                            Bifurcation :
+                            <div class="status-interested">
+                                {{ $lead->lead_bifurcation ?: '-' }}
+                            </div>
+                        </span>
+
+                        <span>
                             Business :
                             <div class="status-interested">
                                 @if(($lead->business_type ?? '') === 'existing')
@@ -164,6 +171,11 @@
                             <p>{{ $lead->designation }}</p>
                         </div>
                         @endif
+
+                        <div class="info-item">
+                            <label>Lead Bifurcation</label>
+                            <p>{{ $lead->lead_bifurcation ?: '-' }}</p>
+                        </div>
 
                         @if($lead->industry)
                         <div class="info-item">
@@ -304,7 +316,7 @@
                                     @endif
 
                                 </div>
-                                {{-- <div class="service-actions action-absolute">
+                                <div class="service-actions action-absolute">
                                     <button type="button" class="edit-contact-btn"
                                         data-action="{{ route('crm.leads.contacts.update', [$lead, $contact]) }}"
                                         data-name="{{ $contact->name }}"
@@ -317,7 +329,7 @@
                                         @csrf
                                         <button type="submit" title="Delete"><i data-lucide="trash-2"></i></button>
                                     </form>
-                                </div> --}}
+                                </div>
 
                             </div>
                         @empty

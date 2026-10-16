@@ -199,7 +199,7 @@
                         <td class="order-id">Plan</td>
                         <td class="status-col">Status</td>
                         @if ($isEmail)
-                            <td class="status-col">Invoice</td>
+                            <td class="invoice">Invoice</td>
                         @endif
                         <td class="status-col">Assigned To</td>
                     </tr>
@@ -329,7 +329,7 @@
                               
                             </td>
                             @if ($isEmail)
-                                <td class="status-col" data-label="Invoice">
+                                <td class="invoice" data-label="Invoice">
                                     @if ($invoiceBadge !== '')
                                         <span class="badge {{ $invoiceBadge }}">{{ $invoiceLabel }}</span>
                                     @else

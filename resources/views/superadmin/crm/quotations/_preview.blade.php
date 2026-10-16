@@ -59,7 +59,7 @@ $waText = rawurlencode('Tax invoice for quotation ' . ($pageQuotation->quotation
 $waLink = $waPhone !== '' ? ('https://wa.me/' . $waCode . $waPhone . '?text=' . $waText) : ('https://wa.me/?text=' . $waText);
 @endphp
 
-<div class=" {{ $isOpen ? '' : 'closed' }}">
+<div>
 
     <div class="quotation-top-meta">
         <div class="qmeta-field">

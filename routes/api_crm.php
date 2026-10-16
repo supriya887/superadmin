@@ -88,6 +88,7 @@ Route::prefix('crm')->name('crm.')->group(function () {
         */
 
         Route::post('/lead-create', [LeadsController::class, 'store'])->name('lead-create');
+        Route::post('/quotation-create', [QuotationController::class, 'store'])->name('quotation-create');
 
         Route::prefix('leads')->name('leads.')->group(function () {
             Route::get('/check-domain', [LeadsController::class, 'checkDomain'])->name('check-domain');
