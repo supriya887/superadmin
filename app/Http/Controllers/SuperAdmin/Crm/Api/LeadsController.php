@@ -17,6 +17,24 @@ class LeadsController extends WebLeadsController
 {
     public function index(Request $request)
     {
+        $source = strtolower(trim((string) $request->input('source', '')));
+        if ($source === '' || $source === 'all') {
+            $request->merge(['source' => null]);
+        } elseif (in_array($source, ['justdial', 'jd', 'just dial'], true)) {
+            $request->merge(['source' => 'JustDial']);
+        } elseif ($source === 'exhibition') {
+            $request->merge(['source' => 'Exhibition']);
+        }
+
+        if (!$request->filled('page_no') && !$request->filled('item_per_page')) {
+            $request->attributes->set('leads_show_all', true);
+        } else {
+            $request->merge([
+                'page' => max(1, (int) $request->input('page_no', 1)),
+                'per_page' => max(1, min((int) $request->input('item_per_page', 10), 100)),
+            ]);
+        }
+
         $data = parent::index($request)->getData();
         $leads = $data['leads'];
 
@@ -26,13 +44,16 @@ class LeadsController extends WebLeadsController
             'data' => [
                 'leads' => $leads->items(),
                 'pagination' => [
-                    'current_page' => $leads->currentPage(),
+                    'page_no' => $leads->currentPage(),
+                    'item_per_page' => $leads->perPage(),
                     'last_page' => $leads->lastPage(),
-                    'per_page' => $leads->perPage(),
                     'total' => $leads->total(),
+                    'from' => $leads->firstItem(),
+                    'to' => $leads->lastItem(),
                 ],
                 'stats' => $data['leadStats'] ?? [],
                 'employees' => $data['employees'] ?? [],
+                'sources' => ['All', 'JustDial', 'Exhibition'],
                 'options' => $this->leadDropdowns(),
             ],
         ]);
@@ -128,12 +149,11 @@ class LeadsController extends WebLeadsController
         parent::store($request);
 
         $lead = Lead::where('email', $request->email)->latest('id')->first();
-        $lead?->load(['contacts', 'services.provider', 'services.plan']);
 
         return response()->json([
             'success' => true,
             'message' => 'Lead added successfully.',
-            'data' => ['lead' => $lead ? ['document' => $this->documentsWithUrl($lead)] + $lead->toArray() : null],
+            'data' => ['lead' => $lead ? $this->leadDetail($lead) : null],
         ], 201);
     }
 
@@ -141,8 +161,7 @@ class LeadsController extends WebLeadsController
     {
         $data = parent::show($lead)->getData();
         $lead = $data['lead'] ?? $lead;
-        $detail = $lead->toArray();
-        $detail['document'] = $this->documentsWithUrl($lead);
+        $detail = $this->leadDetail($lead);
         $detail['domain'] = [
             'domain_type' => $lead->domain_type,
             'domain' => $lead->domain,
@@ -209,24 +228,20 @@ class LeadsController extends WebLeadsController
                 $lead->save();
                 app(FollowUpController::class)->record($lead, $followUp);
             }
-            if ($this->sectionSent($request, 'current_service_info') && $lead->business_type !== 'new') {
-                $this->saveServices($lead, $this->rows($request, 'current_service_info'), true);
-            }
-            if ($this->sectionSent($request, 'our_service_plan_detail')) {
-                $this->saveServices($lead, $this->rows($request, 'our_service_plan_detail'), false);
-            }
-            if ($this->sectionSent($request, 'additional_contact')) {
-                $this->saveContacts($lead, $this->rows($request, 'additional_contact'));
+            $this->saveServices($lead, $this->rows($request, 'current_service_info'), true);
+            $this->saveServices($lead, $this->rows($request, 'our_service_plan_detail'), false);
+            $this->saveContacts($lead, $this->rows($request, 'additional_contact'));
+            if (!$request->hasFile('documents') && !$this->sectionSent($request, 'document') && !$request->attributes->get('document_sync')) {
+                $request->merge(['document' => []]);
+                $request->attributes->set('document_sync', true);
             }
             $this->saveDocuments($lead->refresh(), $request);
         });
 
-        $lead->refresh()->load(['contacts', 'services.provider', 'services.plan']);
-
         return response()->json([
             'success' => true,
             'message' => 'Lead details saved successfully.',
-            'data' => ['lead' => ['document' => $this->documentsWithUrl($lead)] + $lead->toArray()],
+            'data' => ['lead' => $this->leadDetail($lead->refresh())],
         ]);
     }
 
@@ -401,8 +416,14 @@ class LeadsController extends WebLeadsController
     protected function rows(Request $request, string $key): array
     {
         $rows = $request->input($key);
+        if (!is_array($rows)) {
+            return [];
+        }
+        if ($rows && !isset($rows[0]) && !is_array(reset($rows))) {
+            $rows = [$rows];
+        }
 
-        return is_array($rows) ? array_values($rows) : [];
+        return array_values($rows);
     }
 
     protected function saveServices(Lead $lead, array $rows, bool $isInfo): void
@@ -419,8 +440,7 @@ class LeadsController extends WebLeadsController
             if (!$plan) {
                 throw ValidationException::withMessages(['plan_id' => 'Selected plan does not belong to the selected provider.']);
             }
-            $service = $lead->services()->find($row['id'] ?? 0)
-                ?? $old->first(fn ($s) => (int) $s->plan_id === (int) $plan->id);
+            $service = !empty($row['id']) ? $lead->services()->find($row['id']) : null;
             $data = array_filter([
                 'quote_period' => $isInfo ? null : ($row['quote_period'] ?? null),
                 'sku' => $row['sku'] ?? null,
@@ -487,44 +507,65 @@ class LeadsController extends WebLeadsController
 
     protected function saveDocuments(Lead $lead, Request $request): void
     {
-        $sync = $this->sectionSent($request, 'document') || $request->attributes->get('document_sync');
-        if (!$sync && !$request->hasFile('documents')) {
-            return;
-        }
+        $existing = array_values((array) ($lead->document ?? []));
+        $documents = [];
+        $kept = [];
 
-        $existing = array_values(array_filter((array) ($lead->document ?? [])));
-        $documents = $sync ? [] : $existing;
-
-        if ($sync) {
-            foreach ($this->rows($request, 'document') as $row) {
-                if ($doc = $this->matchDocument($existing, $row)) {
-                    $documents[] = $doc;
+        foreach ($this->rows($request, 'document') as $row) {
+            $doc = $this->matchDocument($existing, $row);
+            if (!$doc) {
+                $path = $this->documentPath(is_array($row) ? $row : []) ?? '';
+                $name = trim((string) (is_array($row) ? ($row['name'] ?? '') : ''));
+                $type = trim((string) (is_array($row) ? ($row['type'] ?? '') : $row));
+                if ($path === '' && $name === '' && $type === '') {
+                    continue;
                 }
+                $doc = [
+                    'type' => $type !== '' ? $type : 'Other',
+                    'path' => $path,
+                    'name' => $name !== '' ? $name : basename($path),
+                ];
             }
-            foreach ($existing as $doc) {
-                $path = is_array($doc) ? ($doc['path'] ?? '') : (string) $doc;
-                $kept = collect($documents)->contains(fn ($item) => (is_array($item) ? ($item['path'] ?? '') : $item) === $path);
-                if ($path && !$kept) {
-                    Storage::disk('public')->delete($path);
-                }
+            $path = $this->plainDocumentPath((string) ($doc['path'] ?? ''));
+            if ($path !== '' && isset($kept[$path])) {
+                continue;
+            }
+            $documents[] = $doc;
+            if ($path !== '') {
+                $kept[$path] = true;
             }
         }
 
         if ($request->hasFile('documents')) {
             $names = array_column($documents, 'name');
             foreach ($request->file('documents') as $index => $file) {
-                if (in_array($file->getClientOriginalName(), $names, true)) {
+                if (!$file || !$file->isValid() || in_array($file->getClientOriginalName(), $names, true)) {
                     continue;
                 }
+                $stored = $file->storeAs('crm/leads/documents', 'lead_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension(), 'public');
                 $documents[] = [
                     'type' => $request->input("document_types.$index") ?: 'Other',
-                    'path' => $file->storeAs('crm/leads/documents', 'lead_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension(), 'public'),
+                    'path' => $stored,
                     'name' => $file->getClientOriginalName(),
                 ];
+                $names[] = $file->getClientOriginalName();
+                $kept[$this->plainDocumentPath($stored)] = true;
             }
         }
 
-        $lead->forceFill(['document' => $documents ?: null])->save();
+        foreach ($existing as $doc) {
+            $path = is_array($doc) ? (string) ($doc['path'] ?? '') : (string) $doc;
+            $plain = $this->plainDocumentPath($path);
+            if ($plain === '' || isset($kept[$plain])) {
+                continue;
+            }
+            try {
+                Storage::disk('public')->delete($path);
+            } catch (\Throwable $e) {
+            }
+        }
+
+        $lead->forceFill(['document' => array_values($documents) ?: null])->save();
     }
 
     protected function matchDocument(array $existing, $row): ?array
@@ -532,44 +573,82 @@ class LeadsController extends WebLeadsController
         if (is_numeric($row)) {
             $row = ['index' => (int) $row];
         } elseif (is_string($row)) {
-            $row = str_contains($row, '/') ? ['path' => $row] : ['name' => $row];
+            $row = str_contains($row, '/') ? ['path' => $row] : ['type' => $row, 'name' => $row];
         } elseif (!is_array($row)) {
             return null;
         }
 
-        if (isset($row['index']) && isset($existing[(int) $row['index']])) {
-            $doc = $existing[(int) $row['index']];
-            return is_array($doc) ? $doc : ['type' => 'Other', 'path' => $doc, 'name' => basename((string) $doc)];
+        $storedDocs = [];
+        foreach ($existing as $doc) {
+            $storedDocs[] = is_array($doc) ? $doc : ['type' => 'Other', 'path' => $doc, 'name' => basename((string) $doc)];
         }
 
         $path = $this->documentPath($row);
         $name = trim((string) ($row['name'] ?? ''));
+        $type = trim((string) ($row['type'] ?? ''));
 
-        foreach ($existing as $doc) {
-            $docPath = is_array($doc) ? ($doc['path'] ?? '') : (string) $doc;
-            $docName = is_array($doc) ? ($doc['name'] ?? basename($docPath)) : basename((string) $doc);
-            if (($path && $docPath === $path) || ($name !== '' && $docName === $name)) {
-                return is_array($doc) ? $doc : ['type' => 'Other', 'path' => $doc, 'name' => basename((string) $doc)];
+        if ($path) {
+            foreach ($storedDocs as $stored) {
+                if ($this->plainDocumentPath((string) ($stored['path'] ?? '')) === $path) {
+                    return $this->withDocumentType($stored, $type);
+                }
             }
+        }
+
+        if ($name !== '') {
+            foreach ($storedDocs as $stored) {
+                $docName = (string) ($stored['name'] ?? basename((string) ($stored['path'] ?? '')));
+                if ($docName === $name) {
+                    return $this->withDocumentType($stored, $type);
+                }
+            }
+        }
+
+        if ($type !== '') {
+            $typed = array_values(array_filter($storedDocs, fn ($stored) => strcasecmp((string) ($stored['type'] ?? ''), $type) === 0));
+            if (count($typed) === 1) {
+                return $typed[0];
+            }
+        }
+
+        if ($path === '' && $name === '' && isset($row['index']) && isset($storedDocs[(int) $row['index']])) {
+            return $this->withDocumentType($storedDocs[(int) $row['index']], $type);
         }
 
         return null;
     }
 
-    protected function documentPath(array $row): ?string
+    protected function withDocumentType(array $doc, string $type): array
     {
-        $path = trim((string) ($row['path'] ?? ''));
-        $url = trim((string) ($row['url'] ?? ''));
-        if ($path !== '' && !str_contains($path, '://')) {
-            return $path;
-        }
-        foreach ([$url, $path] as $value) {
-            if ($value !== '' && preg_match('#/storage/(.+?)(?:\?|$)#', $value, $match)) {
-                return urldecode($match[1]);
-            }
+        if ($type !== '') {
+            $doc['type'] = $type;
         }
 
-        return $path !== '' ? $path : null;
+        return $doc;
+    }
+
+    protected function documentPath(array $row): ?string
+    {
+        $path = $this->plainDocumentPath((string) ($row['path'] ?? ''));
+        if ($path !== '') {
+            return $path;
+        }
+
+        return $this->plainDocumentPath((string) ($row['url'] ?? '')) ?: null;
+    }
+
+    protected function plainDocumentPath(string $path): string
+    {
+        $path = str_replace('\\', '/', trim($path));
+        if (preg_match('#/storage/(.+?)(?:\?|$)#', $path, $match)) {
+            $path = urldecode($match[1]);
+        }
+        $path = ltrim($path, '/');
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, strlen('storage/'));
+        }
+
+        return $path;
     }
 
     protected function flattenLeadPayload(Request $request, ?Lead $lead = null): void
@@ -584,10 +663,12 @@ class LeadsController extends WebLeadsController
             }
         }
 
-        // App may send existing docs as "documents" JSON — treat as keep-list, not file uploads
-        if (!$request->hasFile('documents') && (is_array($request->input('documents')) || $request->exists('documents'))) {
-            if (!$this->sectionSent($request, 'document')) {
-                $request->merge(['document' => is_array($request->input('documents')) ? $request->input('documents') : []]);
+        // documents JSON is the list to keep. It replaces document when the app sends the updated list.
+        if (!$request->hasFile('documents') && $request->exists('documents')) {
+            $list = $request->input('documents');
+            $list = is_array($list) ? $list : [];
+            if ($list || !$this->sectionSent($request, 'document')) {
+                $request->merge(['document' => $list]);
             }
             $request->request->remove('documents');
             $request->attributes->set('document_sync', true);
@@ -646,11 +727,44 @@ class LeadsController extends WebLeadsController
         }
     }
 
+    protected function leadDetail(Lead $lead): array
+    {
+        $lead->load([
+            'contacts' => fn ($query) => $query->orderBy('id'),
+            'services' => fn ($query) => $query->with(['provider', 'plan'])->orderBy('id'),
+        ]);
+        $detail = $lead->toArray();
+        $detail['additional_contact'] = [];
+        $detail['current_service_info'] = [];
+        $detail['our_service_plan_detail'] = [];
+
+        foreach ($lead->contacts as $contact) {
+            $detail['additional_contact'][] = $contact->toArray();
+        }
+        foreach ($lead->services as $service) {
+            $row = $service->toArray();
+            if ($service->isCompetitorInfo()) {
+                $detail['current_service_info'][] = $row;
+            } else {
+                $detail['our_service_plan_detail'][] = $row;
+            }
+        }
+        $detail['document'] = $this->documentsWithUrl($lead);
+
+        return $detail;
+    }
+
     protected function documentsWithUrl(Lead $lead): array
     {
-        return array_values(array_map(function ($doc) {
+        $documents = [];
+        foreach (array_values((array) ($lead->document ?? [])) as $doc) {
+            if ($doc === null || $doc === '') {
+                continue;
+            }
             $doc = is_array($doc) ? $doc : ['type' => 'Other', 'path' => $doc, 'name' => basename((string) $doc)];
-            return $doc + ['url' => asset('storage/' . ($doc['path'] ?? ''))];
-        }, array_filter((array) ($lead->document ?? []))));
+            $documents[] = $doc + ['url' => asset('storage/' . ($doc['path'] ?? ''))];
+        }
+
+        return $documents;
     }
 }
