@@ -1660,7 +1660,8 @@ table {
 .inactive,
 .overdue,
 .high,
-.escalated {
+.escalated,
+.rejected {
     background: #F7577E;
     color: #fff
 }
@@ -1684,7 +1685,7 @@ table {
     gap: 10px;
     justify-content: center
 }
-.status-col,
+.status-col,.invoice
 .amount {
     width: 100%;
     text-align: center
@@ -1716,9 +1717,6 @@ table {
     color: var(--white)
 }
 @media(max-width:991px) {
-    .table-head {
-        display: none
-    }
     .order-row {
         grid-template-columns: 1fr;
         gap: 16px
@@ -2831,15 +2829,7 @@ textarea {
     }
 }
 @media (max-width:768px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr)
-    }
-    .summary-card {
-        padding: 18px
-    }
-    .stat-content h2 {
-        font-size: 20px
-    }
+
 }
 @media (max-width:480px) {
     .stats-grid {
@@ -2888,15 +2878,7 @@ textarea {
         flex-direction: column;
         align-items: flex-start
     }
-    .sales-filter {
-        width: 100%;
-        justify-content: space-between
-    }
-    .sales-filter button {
-        flex: 1;
-        text-align: center;
-        padding: 10px 12px
-    }
+
     .financial-chart {
         height: 300px
     }

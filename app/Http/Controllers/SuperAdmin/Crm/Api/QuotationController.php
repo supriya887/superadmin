@@ -36,7 +36,7 @@ class QuotationController extends WebQuotationController
 
         return response()->json([
             'success' => true,
-            'message' => 'Send this body to POST /api/crm/quotations.',
+            'message' => 'Send this body to POST /api/crm/quotation-create (multipart/form-data when needed).',
             'data' => [
                 'sample' => [
                     'deal_type' => 'new',

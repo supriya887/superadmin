@@ -126,9 +126,18 @@ class LeadsController extends Controller
             $query->whereDate($dateColumn, '<=', $request->to);
         }
 
+        if ($request->attributes->get('leads_show_all')) {
+            $perPage = max((clone $query)->count(), 1);
+        } else {
+            $perPage = (int) $request->input('per_page', 10);
+            $perPage = max(1, min($perPage, 100));
+        }
+
+        $page = max(1, (int) $request->input('page', 1));
+
         $leads = $query
             ->latest()
-            ->paginate(10)
+            ->paginate($perPage, ['*'], 'page', $page)
             ->withQueryString();
 
         $employees = $this->crmAssigneeNames();

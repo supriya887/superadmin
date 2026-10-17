@@ -714,11 +714,7 @@ aside.sidebar.close .crm-chat a {
      RESPONSIVE
   ========================================= */
 
-@media (max-width: 900px) {
-    .approval-activity-section {
-        grid-template-columns: 1fr;
-    }
-}
+
 
 @media (max-width: 600px) {
     .approval-item {
@@ -1039,7 +1035,7 @@ aside.sidebar.close .crm-chat a {
 }
 
 .items-selected {
-    margin: 6px 0 0;
+    margin: 0;
     font-size: var(--font-size-14px);
     color: #6b7280;
     display: flex;
@@ -2174,6 +2170,7 @@ aside.sidebar.close .crm-chat a {
   ========================================================= */
 
 .lead-contact-card {
+    position: relative;
     width: 100%;
     margin-top: 11px;
     padding: 12px;
@@ -4399,15 +4396,7 @@ aside.sidebar.close .crm-chat a {
     white-space: nowrap;
 }
 
-@media (max-width: 900px) {
 
-    .crm-quo-table .table-head,
-    .crm-quo-table .crm-quo-row,
-    .es-quo-table .table-head,
-    .es-quo-table .es-quo-row {
-        grid-template-columns: 1fr;
-    }
-}
 
 /* Add lead location dropdown */
 .plan-box,
@@ -4605,53 +4594,7 @@ aside.sidebar.close .crm-chat a {
 }
 
 @media (max-width: 991px) {
-    .page-header {
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: flex-start;
-    }
 
-    .crm-actions {
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .common-table-header,
-    .crm-lead-header,
-    .common-table-header.crm-quo-header,
-    .common-table-header.es-quo-header {
-        flex-wrap: wrap;
-    }
-
-    .table-search,
-    .crm-lead-header .table-search,
-    .crm-quo-header .table-search,
-    .es-quo-header .table-search {
-        flex: 1 1 100%;
-        width: 100%;
-        min-width: 0;
-    }
-
-    .crm-lead-title,
-    .crm-quo-title,
-    .es-quo-title {
-        width: 100%;
-        min-width: 0;
-        flex-wrap: wrap;
-    }
-
-    #filterPanel .filter-grid,
-    .crm-quo-list #filterPanel .filter-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    #filterPanel .date-range {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .stats-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
 }
 
 @media (max-width: 600px) {
@@ -5104,13 +5047,7 @@ aside.sidebar.close .crm-chat a {
     margin-top: 8px;
 }
 
-@media (max-width: 991px) {
 
-    .crm-lead-title p,
-    .items-selected {
-        white-space: normal;
-    }
-}
 
 @media (max-width: 600px) {
     .credit-modal-box {
@@ -5549,71 +5486,6 @@ textarea.is-invalid {
     }
 }
 
-@media (max-width: 991px) {
-    .crm-leads-page .page-header {
-        flex-wrap: wrap;
-        align-items: flex-start;
-    }
-
-    .crm-leads-page .crm-actions,
-    .crm-leads-page .back {
-        width: 100%;
-    }
-
-    .crm-leads-list .stats-grid,
-    .crm-leads-list .stats-grid.stats-grid-5 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-    }
-
-    .crm-leads-list .common-table-header {
-        flex-wrap: wrap;
-    }
-
-    .crm-leads-list .table-search {
-        flex: 1 1 100%;
-        width: 100%;
-        min-width: 0;
-    }
-
-    .crm-leads-list .crm-lead-tabs {
-        padding-left: 0;
-        gap: 8px;
-        overflow-x: auto;
-    }
-
-    .crm-leads-list .crm-lead-tabs a {
-        min-width: 120px;
-        height: 44px;
-        flex-shrink: 0;
-        font-size: 13px;
-    }
-
-    .crm-leads-add .main-form-layout,
-    .crm-leads-add .form-right {
-        display: block;
-        grid-template-columns: 1fr;
-        width: 100%;
-    }
-
-    .crm-leads-add .form-grid,
-    .crm-leads-add .plan-box .form-grid,
-    .crm-leads-add .additional-contact-grid {
-        grid-template-columns: 1fr;
-        gap: 14px;
-    }
-
-    .crm-leads-add .lead-specification,
-    .crm-leads-add .document-section {
-        margin-top: 20px;
-    }
-
-    .crm-leads-show .lead-info-grid,
-    .crm-leads-show .contact-info-grid {
-        grid-template-columns: 1fr 1fr;
-        column-gap: 16px;
-    }
-}
 
 @media (max-width: 767px) {
 
@@ -5887,11 +5759,7 @@ textarea.is-invalid {
     font-size: 12px;
 }
 
-@media (max-width: 900px) {
-    .followup-detail {
-        grid-template-columns: 1fr;
-    }
-}
+
 
 .common-form .phone-group,
 .credit-modal .phone-group {
