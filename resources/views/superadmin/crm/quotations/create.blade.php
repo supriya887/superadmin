@@ -23,7 +23,9 @@
             $planRows = [['provider_id' => '', 'plan_id' => '', 'quote_period' => 'Yearly', 'sku' => '', 'quantity' => 1, 'rate' => '']];
         }
     }
-    $dealTypeValue = old('deal_type', $quotation->deal_type ?? 'new') ?: 'new';
+    $requestedDeal = (string) request('deal_type');
+    $savedDeal = $quotation?->deal_type;
+    $dealTypeValue = old('deal_type', $savedDeal ?: (array_key_exists($requestedDeal, \App\Models\Quotation::DEAL_TYPES) ? $requestedDeal : 'new')) ?: 'new';
     $currentServices = $currentServices ?? collect();
     $domainTypeValue = old('domain_type', $lead->domain_type ?? '');
     if ($isEdit && $domainTypeValue === '') {

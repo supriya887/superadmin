@@ -245,7 +245,7 @@
 
     </ul>
     <div class="crm-chat">
-        <a href="crm-chat.php">
+        <a href="/crm/chat">
             <div class="icon">
                 <i data-lucide="messages-square"></i>
             </div>

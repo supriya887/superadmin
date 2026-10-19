@@ -69,8 +69,8 @@
 
 
         <!-- Renewals -->
-        <li class="dashboard">
-            <a href="renewals.php">
+        <li class="dashboard {{ request()->routeIs('crm.renewals*') ? 'active' : '' }}">
+            <a href="{{ route('crm.renewals') }}">
                 <div class="left">
                     <div class="icon">
                         <i data-lucide="refresh-cw"></i>
@@ -128,7 +128,7 @@
 
 
         <!-- Reports -->
-        <li class="dashboard {{ request()->routeIs('crm.reports') ? 'active' : '' }}">
+        <li class="dashboard {{ request()->routeIs('crm.reports*') ? 'active' : '' }}">
             <a href="{{ route('crm.reports') }}">
                 <div class="left">
                     <div class="icon">
@@ -140,8 +140,8 @@
         </li>
 
     </ul>
-    <div class="crm-chat">
-        <a href="crm-chat.php">
+    <div class="crm-chat {{ request()->routeIs('crm.chat') ? 'active' : '' }}">
+        <a href="{{ route('crm.chat') }}">
             <div class="icon">
                 <i data-lucide="messages-square"></i>
             </div>
