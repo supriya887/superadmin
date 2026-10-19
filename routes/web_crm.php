@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\SuperAdmin\Crm\ChatController;
 use App\Http\Controllers\SuperAdmin\Crm\DashboardController;
 use App\Http\Controllers\SuperAdmin\Crm\EmployeeController;
 use App\Http\Controllers\SuperAdmin\Crm\FollowUpController;
 use App\Http\Controllers\SuperAdmin\Crm\LeadsController;
 use App\Http\Controllers\SuperAdmin\Crm\QuotationController;
+use App\Http\Controllers\SuperAdmin\Crm\RenewalController;
 use App\Http\Controllers\SuperAdmin\Crm\CrmSetting\LeadSourceController;
 use App\Http\Controllers\SuperAdmin\Crm\CrmSetting\LeadStatusController;
 use App\Http\Controllers\SuperAdmin\Crm\CrmSetting\LeadBifurcationController;
@@ -36,6 +38,13 @@ Route::prefix('crm')
             ->name('crm.dashboard');
         Route::get('/reports', [DashboardController::class, 'reports'])
             ->name('crm.reports');
+        Route::get('/reports/{report}', [DashboardController::class, 'reportShow'])
+            ->name('crm.reports.show')
+            ->where('report', 'sales|pipeline|won|lost|leads|sources|conversion|unassigned|deals|deals-month|deals-quarter|quotations|sent|discounted|renewals|scheduled|overdue|activities');
+
+        Route::get('/chat', [ChatController::class, 'index'])->name('crm.chat');
+        Route::post('/chat', [ChatController::class, 'store'])->name('crm.chat.store');
+        Route::post('/chat/{id}/message', [ChatController::class, 'message'])->whereNumber('id')->name('crm.chat.message');
         //Leads
         Route::get('/leads', [LeadsController::class, 'index'])
             ->name('crm.leads');
@@ -93,6 +102,11 @@ Route::prefix('crm')
             ->name('crm.followups.show');
         Route::post('/followups/{lead}', [FollowUpController::class, 'store'])
             ->name('crm.followups.store');
+        Route::get('/renewals', [RenewalController::class, 'index'])
+            ->name('crm.renewals');
+        Route::get('/renewals/{id}', [RenewalController::class, 'show'])
+            ->whereNumber('id')
+            ->name('crm.renewals.show');
         Route::get('/quotations', [QuotationController::class, 'index'])
             ->name('crm.quotations');
         Route::get('/deals', [QuotationController::class, 'deals'])
